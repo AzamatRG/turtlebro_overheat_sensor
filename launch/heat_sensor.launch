@@ -1,5 +1,5 @@
 <launch>
-    <node pkg="turtlebro_overheat_sensor" type="heat_sensor.py" name="heat_sensor" output="screen">
+    <node pkg="turtlebro_overheat_sensor" type="overheat_sensor.py" name="heat_sensor" output="screen">
         <param name="wait_after_detection" value="10" />
         <param name="threshold" value="40"/>
         <!--<param name="control_topic" value="patrol_control"/>-->
