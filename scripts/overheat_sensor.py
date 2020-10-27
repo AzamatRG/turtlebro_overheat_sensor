@@ -143,7 +143,7 @@ class HeatSensor(object):
 
     def _odom_callback(self, odom_msg):
         # just put msg data to self variable
-        rospy.loginfo('HeatSensor: odometry message received')
+        # rospy.loginfo('HeatSensor: odometry message received')
         self._current_place = odom_msg.pose
 
     def _heat_callback(self, heat_msg):
