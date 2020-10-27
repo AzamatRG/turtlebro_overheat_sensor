@@ -5,7 +5,7 @@ This package allows you to start a node for receiving data
 from the AMG88xx GridEYE 8x8 IR camera thermal sensor.
  When a heat source with a temperature higher than 
  threshold is detected, the detection node sends info message.
- After that, the robot continue patrolling, but for the first 10 seconds it ignores all sources of heat.
+ After that, the node continues work, but for the first 10 seconds it ignores all sources of heat.
 
 
 ### Package installation on RPI
