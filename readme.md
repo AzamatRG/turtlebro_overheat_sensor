@@ -1,12 +1,12 @@
 
 ### Description
 
-This package allows you to start a node for receiving data from the AMG88xx GridEYE 8x8 IR camera thermal sensor and control the patrolling process from the https://github.com/voltbro/turtlebro_patrol package.  When a heat source with a temperature higher than threshold is detected, the detection node stops patrolling, turns on the signal lamp and enters the standby state for 10 seconds. After that, the robot starts patrolling again, but for the first 10 seconds it ignores all sources of heat.
+This package allows you to start a node for receiving data 
+from the AMG88xx GridEYE 8x8 IR camera thermal sensor.
+ When a heat source with a temperature higher than 
+ threshold is detected, the detection node sends info message.
+ After that, the robot continue patrolling, but for the first 10 seconds it ignores all sources of heat.
 
-
-### Dependecies
-
-- turtlebro_patrol  
 
 ### Package installation on RPI
 
@@ -14,9 +14,9 @@ Install the package on RaspberryPi in the "standard" way:
 
 ```
 cd ~/ros_catkin_ws/src
-git clone https://github.com/ubercola/turtlebro_overheat_detector
+git clone https://github.com/ubercola/turtlebro_overheat_ensor
 cd ~/ros_catkin_ws
-sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic --pkg=turtlebro_overheat_detector
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic --pkg=turtlebro_overheat_sensor
 ```
 
 ### Connecting thermal sensor
@@ -56,6 +56,7 @@ Install Arduino Ide https://www.arduino.cc/en/main/software
 
  - Open file src/arduino/amg88xx_main/amg88xx_main.ino from cloned repo in Arduino IDE. 
 Connect built-in turtlebro`s Arduino Mega via USB, and upload script to it.
+(or upload remotely)
 
 After uploading you must see topics "amg88xx_pixels" and "/alarm_led" in list of ros topics.
 
@@ -71,7 +72,10 @@ Launch patrol and heat detector:
 roslaunch turtlebro_overheat_detector heat_patrol.launch
 ```
 
-Heat detector node ('heat_detector') will read topic "amg88xx_pixels" (it publish array of 64 floats, those it got from sensor) and check maximum value of temperature from that array. If maximum value is bigger than threshold (threshold can be set from .launch file), node sends command 'pause' to topic '/patrol_control' and send message to topic '/alarm_led'(it turns on the signal lamp). For 10 seconds patrol node enters the standby state. After that, the robot starts patrolling again, but for the first 10 seconds it ignores all sources of heat.
+Heat detector node ('heat_sensor') will read topic "amg88xx_pixels" (it publish array of 64 floats, those it got from sensor) and check maximum value of temperature from that array. 
+If maximum value is bigger than threshold (threshold can be set from .launch file), node sends 
+information string to topic '/heat_sensor_output'
+For 10 seconds patrol node enters the standby state.
 
 You can manually pub message to "/alarm_led" topic to set lamp on and off.  
 To turn lamp on.  
