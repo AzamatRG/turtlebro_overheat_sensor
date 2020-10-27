@@ -62,14 +62,9 @@ After uploading you must see topics "amg88xx_pixels" and "/alarm_led" in list of
 
 ### Launch
 
-Launch only detector node, without patrol:
+Launch only detector node:
 ```
-roslaunch turtlebro_overheat_detector heat_detector.launch
-```
-
-Launch patrol and heat detector:
-```
-roslaunch turtlebro_overheat_detector heat_patrol.launch
+roslaunch turtlebro_overheat_sensor heat_sensor.launch
 ```
 
 Heat detector node ('heat_sensor') will read topic "amg88xx_pixels" (it publish array of 64 floats, those it got from sensor) and check maximum value of temperature from that array. 
