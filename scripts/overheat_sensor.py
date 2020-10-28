@@ -6,6 +6,7 @@ voltbro 2020
 """
 
 import rospy
+from turtlebro_overheat_sensor.msg import HeatAlert
 from std_msgs.msg import Float32MultiArray, String, Bool
 from nav_msgs.msg import Odometry
 import numpy as np
@@ -59,7 +60,7 @@ class HeatSensor(object):
         # init self as subscriber and publisher and start node
         # self._alarm_led_pub = rospy.Publisher(self._alarm_led_topic, Bool, queue_size=10)
         # self._cmd_pub = rospy.Publisher(self._control_topic, String, queue_size=10)
-        self._output_pub = rospy.Publisher(self._output_topic, String, queue_size=10)
+        self._output_pub = rospy.Publisher(self._output_topic, HeatAlert, queue_size=10)
         self._heat_sub = rospy.Subscriber(self._heat_pixels_topic, Float32MultiArray, self._heat_callback)
         self._odom_sub = rospy.Subscriber(self._odom_topic, Odometry, self._odom_callback)
 
@@ -133,13 +134,20 @@ class HeatSensor(object):
         # send str with that format:
         # Overheat_detected!;2020:10:27 18:01:16;x:0.67346783467;y:-0.8768787887;temp:72.878
         # datetime.now().strftime("%Y:%m:%d %H:%M:%S")
-        info_str = "Overheat_detected!;{};x:{};y:{};temp:{}".format(
-            datetime.now().strftime("%Y.%m.%d %H:%M:%S"),
-            self._current_place.pose.position.x,
-            self._current_place.pose.position.y,
-            self._current_max_temp
-        )
-        self._output_pub.publish(info_str)
+        # info_str = "Overheat_detected!;{};x:{};y:{};temp:{}".format(
+        #     datetime.now().strftime("%Y.%m.%d %H:%M:%S"),
+        #     self._current_place.pose.position.x,
+        #     self._current_place.pose.position.y,
+        #     self._current_max_temp
+        # )
+        alert_msg = HeatAlert()
+        alert_msg.time = rospy.Time.now()
+        alert_msg.x = self._current_place.pose.position.x
+        alert_msg.y = self._current_place.pose.position.y
+        alert_msg.temp = self._current_max_temp
+        alert_msg.data = "Overheat_detected!"
+
+        self._output_pub.publish(alert_msg)
 
     def _odom_callback(self, odom_msg):
         # just put msg data to self variable
