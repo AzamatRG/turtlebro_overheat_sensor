@@ -15,7 +15,7 @@ Install the package on RaspberryPi in the "standard" way:
 
 ```
 cd ~/ros_catkin_ws/src
-git clone https://github.com/ubercola/turtlebro_overheat_ensor
+git clone https://github.com/voltbro/turtlebro_overheat_ensor
 cd ~/ros_catkin_ws
 sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic --pkg=turtlebro_overheat_sensor
 ```
