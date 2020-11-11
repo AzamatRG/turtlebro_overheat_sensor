@@ -1,5 +1,5 @@
 time time
 string data
-int32 x
-int32 y
-int32 temp
+float32 x
+float32 y
+float32 temp
