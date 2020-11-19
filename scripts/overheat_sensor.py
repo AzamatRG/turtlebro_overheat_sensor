@@ -24,7 +24,7 @@ class HeatSensor(object):
 
         # hardcoded constants
         self._current_pixel_array = None
-        self._threshold = 45
+        self._threshold = 55
         self._overheat_detected = False
         self._overheat_ignore = False
         self._overheat_start_time = 0
