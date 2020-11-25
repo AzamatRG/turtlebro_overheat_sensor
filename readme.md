@@ -1,10 +1,10 @@
 
 ### Description
 
-This package allows you to start a node for receiving data 
+This package allows you to start a node for receiving data
 from the AMG88xx GridEYE 8x8 IR camera thermal sensor.
- When a heat source with a temperature higher than 
- threshold is detected, the detection node sends info message with 
+ When a heat source with a temperature higher than
+ threshold is detected, the detection node sends info message with
  custom message format HeatAlert to /heat_sensor_output topic.
  After that, the node continues work, but for the first 10 seconds it ignores all sources of heat.
 
@@ -53,9 +53,9 @@ If you are using an unbranded LED lamp module, connect a current limiting resist
 Install Arduino Ide https://www.arduino.cc/en/main/software  
  - Open the Arduino Library Manager, find AMGXX library in search string, and install it. You also can download it directly from https://github.com/adafruit/Adafruit_AMG88xx  
 
- - Add folder src/arduino/ros_lib manually to your Arduino Libraries.
+ - Generate and copy ros_lib to your Arduino Libraries.
 
- - Open file src/arduino/amg88xx_main/amg88xx_main.ino from cloned repo in Arduino IDE. 
+ - Open file src/arduino/amg88xx_main/amg88xx_main.ino from cloned repo in Arduino IDE.
 Connect built-in turtlebro`s Arduino Mega via USB, and upload script to it.
 (or upload remotely)
 
@@ -68,8 +68,8 @@ Launch only detector node:
 roslaunch turtlebro_overheat_sensor heat_sensor.launch
 ```
 
-Heat detector node ('heat_sensor') will read topic "amg88xx_pixels" (it publish array of 64 floats, those it got from sensor) and check maximum value of temperature from that array. 
-If maximum value is bigger than threshold (threshold can be set from .launch file), node sends 
+Heat detector node ('heat_sensor') will read topic "amg88xx_pixels" (it publish array of 64 floats, those it got from sensor) and check maximum value of temperature from that array.
+If maximum value is bigger than threshold (threshold can be set from .launch file), node sends
 information string to topic '/heat_sensor_output'
 For 10 seconds patrol node enters the standby state.
 
@@ -91,7 +91,7 @@ rostopic echo /amg88xx_pixels
 You must see something like that:
 ```
 ---
-layout: 
+layout:
   dim: []
   data_offset: 0
 data: [18.5, 18.0, 18.5, 18.5, 18.5, 18.75, 18.75, 18.0, 18.75, 18.25, 18.5, 18.0, 18.5, 18.0, 18.5, 18.25, 18.75, 19.0, 18.5, 19.0, 18.75, 18.5, 18.75, 19.0, 19.0, 18.25, 18.75, 18.75, 18.75, 18.75, 18.5, 18.75, 18.75, 18.25, 19.0, 18.75, 18.75, 19.0, 19.0, 18.5, 18.0, 17.75, 18.75, 18.75, 18.25, 18.0, 18.5, 18.75, 18.0, 17.25, 18.0, 18.0, 18.25, 18.5, 18.75, 19.0, 18.25, 19.25, 19.0, 19.0, 18.25, 19.25, 19.5, 19.0]
