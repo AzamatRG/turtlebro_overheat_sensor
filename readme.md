@@ -48,6 +48,13 @@ Led lamp '-' pin must be connected to 'GND' pin on the same connector marked as 
 NOTE:  
 If you are using an unbranded LED lamp module, connect a current limiting resistor to the LED.  
 
+### Connecting limit switch
+
+Limit switch 'ON' pin must be connected STRICTLY to pin marked 'GPIO' in  white connector marked as 'A13'.   
+Limit switch 'GND' pin must be connected to 'GND' pin on the same connector marked as 'A12'.  
+Limit switch 'VCC' pin must be connected to '5V' pin on the same connector marked as 'A12'.  
+
+
 ### How to install on Arduino
 
 Install Arduino Ide https://www.arduino.cc/en/main/software  
@@ -59,7 +66,7 @@ Install Arduino Ide https://www.arduino.cc/en/main/software
 Connect built-in turtlebro`s Arduino Mega via USB, and upload script to it.
 (or upload remotely)
 
-After uploading you must see topics "amg88xx_pixels" and "/alarm_led" in list of ros topics.
+After uploading you must see topics "amg88xx_pixels" , "/alarm_led" and "/limit_switch" in list of ros topics.
 
 ### Launch
 
@@ -97,4 +104,23 @@ layout:
 data: [18.5, 18.0, 18.5, 18.5, 18.5, 18.75, 18.75, 18.0, 18.75, 18.25, 18.5, 18.0, 18.5, 18.0, 18.5, 18.25, 18.75, 19.0, 18.5, 19.0, 18.75, 18.5, 18.75, 19.0, 19.0, 18.25, 18.75, 18.75, 18.75, 18.75, 18.5, 18.75, 18.75, 18.25, 19.0, 18.75, 18.75, 19.0, 19.0, 18.5, 18.0, 17.75, 18.75, 18.75, 18.25, 18.0, 18.5, 18.75, 18.0, 17.25, 18.0, 18.0, 18.25, 18.5, 18.75, 19.0, 18.25, 19.25, 19.0, 19.0, 18.25, 19.25, 19.5, 19.0]
 ---
 
+```
+
+You can manually read messages from "/limit_switch" topic to see state of   
+```
+rostopic echo /limit_switch  
+
+```
+You must see something like that:  
+```
+data: True
+---
+data: True
+---
+data: True
+---
+data: False
+---
+data: False
+---
 ```

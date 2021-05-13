@@ -26,6 +26,7 @@
 // prepare signal led output
 // led connected to pin D30
 #define ledPin A12
+#define buttonPin A13
 
 // timing for read AMG88xx data
 int amg88xx_delay  = 1000; //ms
@@ -49,9 +50,11 @@ ros::NodeHandle_<NewHardware>  nh;
 // declare msgs
 std_msgs::Float32MultiArray f_array_msg;
 std_msgs::Bool toggle_msg;
+std_msgs::Bool button_msg;
 
 // pub
 ros::Publisher amg88xx_pixels_pub("amg88xx_pixels", &f_array_msg);
+ros::Publisher button_state_pub("limit_switch", &button_msg);
 
 void messageCb(const std_msgs::Bool& toggle_msg)
 {
@@ -73,6 +76,8 @@ void setup()
     // default HIGH
     pinMode(ledPin, OUTPUT);
     digitalWrite(ledPin, LOW);
+    pinMode(buttonPin, INPUT);
+    // digitalWrite(ledPin, LOW);
 
     // default settings
     status = amg.begin();
@@ -86,6 +91,7 @@ void setup()
 
     nh.initNode();
     nh.advertise(amg88xx_pixels_pub);
+    nh.advertise(button_state_pub);
     nh.subscribe(sub);
 
 }
@@ -96,6 +102,7 @@ void loop()
     // check sub every 10 ms, but pub pixel array only every 1 sec
 
     unsigned long currentMillis = millis();
+    int button_state = LOW;
 
     if (currentMillis - previousMillis >= amg88xx_delay)
     {
@@ -108,6 +115,19 @@ void loop()
         }
 
         amg88xx_pixels_pub.publish(&f_array_msg);
+
+        // although publish current button state
+        button_state = digitalRead(buttonPin);
+        if(button_state == LOW)
+        {
+            button_msg.data = true;
+            button_state_pub.publish(&button_msg);
+        }
+        else
+        {
+            button_msg.data = false;
+            button_state_pub.publish(&button_msg);
+        }
     }
 
     nh.spinOnce();
