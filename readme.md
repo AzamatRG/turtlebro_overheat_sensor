@@ -50,9 +50,9 @@ If you are using an unbranded LED lamp module, connect a current limiting resist
 
 ### Connecting limit switch
 
-Limit switch 'ON' pin must be connected STRICTLY to pin marked 'GPIO' in  white connector marked as 'A13'.   
-Limit switch 'GND' pin must be connected to 'GND' pin on the same connector marked as 'A12'.  
-Limit switch 'VCC' pin must be connected to '5V' pin on the same connector marked as 'A12'.  
+Limit switch 'NC' pin must be connected STRICTLY to pin marked 'GPIO' in  white connector marked as 'A13'.   
+Limit switch 'GND' pin must be connected to 'GND' pin on the same connector marked as 'A13'.  
+Limit switch 'VCC' pin must be connected to '5V' pin on the same connector marked as 'A13'.  
 
 
 ### How to install on Arduino

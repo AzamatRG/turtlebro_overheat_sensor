@@ -120,12 +120,12 @@ void loop()
         button_state = digitalRead(buttonPin);
         if(button_state == LOW)
         {
-            button_msg.data = true;
+            button_msg.data = false;
             button_state_pub.publish(&button_msg);
         }
         else
         {
-            button_msg.data = false;
+            button_msg.data = true;
             button_state_pub.publish(&button_msg);
         }
     }
