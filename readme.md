@@ -14,10 +14,10 @@ from the AMG88xx GridEYE 8x8 IR camera thermal sensor.
 Install the package on RaspberryPi in the "standard" way:
 
 ```
-cd ~/ros_catkin_ws/src
+cd ~/catkin_ws/src
 git clone https://github.com/voltbro/turtlebro_overheat_sensor.git
-cd ~/ros_catkin_ws
-sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic --pkg=turtlebro_overheat_sensor
+cd ~/catkin_ws
+catkin_make --pkg turtlebro_overheat_sensor
 ```
 
 ### Connecting thermal sensor
