@@ -24,23 +24,23 @@ class HeatSensor(object):
 
         # hardcoded constants
         self._current_pixel_array = None
-        #self._threshold = 55
+        self._threshold = 55
 
         self._overheat_detected = False
         self._overheat_ignore = False
         self._overheat_start_time = 0
         # self._blink_start_time = 0
         self._wait_after_detection = 10  # sec
-        # self._ignore_heat_after_continue = 10  # sec
-        # self._continue_command = 'next'
-        # self._pause_command = 'pause'
-        # self._control_topic = 'patrol_control'
+        self._ignore_heat_after_continue = 10  # sec
+        self._continue_command = 'next'
+        self._pause_command = 'pause'
+        self._control_topic = 'patrol_control'
         self._heat_pixels_topic = 'amg88xx_pixels'
-        # self._alarm_led_topic = 'alarm_led'
+        self._alarm_led_topic = 'alarm_led'
         self._output_topic = 'heat_sensor_output'
         self._odom_topic = 'odom'
-        # self._alarm_blink_period = 0.5
-        # self._current_led_state = False
+        self._alarm_blink_period = 0.5
+        self._current_led_state = False
 
         # start it
         rospy.init_node('heat_sensor')
@@ -48,25 +48,25 @@ class HeatSensor(object):
 
         # get roslaunch params and reinit part of params
         self._wait_after_detection = rospy.get_param('~wait_after_detection', 7)
-        # self._ignore_heat_after_continue = rospy.get_param('~ignore_heat_after_continue', 10)
+        self._ignore_heat_after_continue = rospy.get_param('~ignore_heat_after_continue', 10)
         self._threshold = rospy.get_param('~threshold', 55)
-        # self._control_topic = rospy.get_param('~control_topic', 'patrol_control')
-        # self._alarm_led_topic = rospy.get_param('~alarm_led_topic ', 'alarm_led')
+        self._control_topic = rospy.get_param('~control_topic', 'patrol_control')
+        self._alarm_led_topic = rospy.get_param('~alarm_led_topic ', 'alarm_led')
         self._heat_pixels_topic = rospy.get_param('~heat_pixels_topic', 'amg88xx_pixels')
 
         self._rate = rospy.Rate(10)
 
         self._current_place = None
         self._current_max_temp = None
-        # init self as subscriber and publisher and start node
-        # self._alarm_led_pub = rospy.Publisher(self._alarm_led_topic, Bool, queue_size=10)
-        # self._cmd_pub = rospy.Publisher(self._control_topic, String, queue_size=10)
+        init self as subscriber and publisher and start node
+        self._alarm_led_pub = rospy.Publisher(self._alarm_led_topic, Bool, queue_size=10)
+        self._cmd_pub = rospy.Publisher(self._control_topic, String, queue_size=10)
         self._output_pub = rospy.Publisher(self._output_topic, HeatAlert, queue_size=10)
         self._heat_sub = rospy.Subscriber(self._heat_pixels_topic, Float32MultiArray, self._heat_callback)
         self._odom_sub = rospy.Subscriber(self._odom_topic, Odometry, self._odom_callback)
 
         # turn off the LED by force if it accidentally remains in state on
-        # self._alarm_led_pub.publish(False)
+         self._alarm_led_pub.publish(False)
 
         # start publishing loop
         self._run()
@@ -120,27 +120,27 @@ class HeatSensor(object):
             #     if self._overheat_ignore:
             #         rospy.loginfo('HeatSensor: we have to ignore heat for some time')
 
-    # def _alarm_blink(self):
-    #     # blinks only when self._overheat_detected or self._overheat_ignore
-    #     if self._overheat_detected or self._overheat_ignore:
-    #         if rospy.Time.now().to_sec() - self._blink_start_time >= self._alarm_blink_period:
-    #             self._current_led_state = not self._current_led_state
-    #             # time to toggle alarm lamp on arduino
-    #             self._alarm_led_pub.publish(self._current_led_state)
-    #             # and update time
-    #             self._blink_start_time = rospy.Time.now().to_sec()
-    #     pass
+    def _alarm_blink(self):
+        # blinks only when self._overheat_detected or self._overheat_ignore
+        if self._overheat_detected or self._overheat_ignore:
+            if rospy.Time.now().to_sec() - self._blink_start_time >= self._alarm_blink_period:
+                self._current_led_state = not self._current_led_state
+                # time to toggle alarm lamp on arduino
+                self._alarm_led_pub.publish(self._current_led_state)
+                # and update time
+                self._blink_start_time = rospy.Time.now().to_sec()
+        pass
 
     def _send_info_msg(self):
-        # send str with that format:
-        # Overheat_detected!;2020:10:27 18:01:16;x:0.67346783467;y:-0.8768787887;temp:72.878
-        # datetime.now().strftime("%Y:%m:%d %H:%M:%S")
-        # info_str = "Overheat_detected!;{};x:{};y:{};temp:{}".format(
-        #     datetime.now().strftime("%Y.%m.%d %H:%M:%S"),
-        #     self._current_place.pose.position.x,
-        #     self._current_place.pose.position.y,
-        #     self._current_max_temp
-        # )
+        send str with that format:
+        Overheat_detected!;2020:10:27 18:01:16;x:0.67346783467;y:-0.8768787887;temp:72.878
+        datetime.now().strftime("%Y:%m:%d %H:%M:%S")
+        info_str = "Overheat_detected!;{};x:{};y:{};temp:{}".format(
+            datetime.now().strftime("%Y.%m.%d %H:%M:%S"),
+            self._current_place.pose.position.x,
+            self._current_place.pose.position.y,
+            self._current_max_temp
+        )
         alert_msg = HeatAlert()
         alert_msg.time = rospy.Time.now()
         alert_msg.x = self._current_place.pose.position.x
@@ -162,15 +162,15 @@ class HeatSensor(object):
 
         if not self._overheat_detected :
             rospy.loginfo('HeatSensor: heat max value is {}'.format(np.max(self._current_pixel_array)))
-            # rospy.loginfo(heat_msg.data)
+            rospy.loginfo(heat_msg.data)
 
         # and check if there is overheat
         self._pixels_identifier()
 
     def _run(self):
         while not rospy.is_shutdown():
-            # we call alarm blink check everytime
-            # self._alarm_blink()
+            we call alarm blink check everytime
+            self._alarm_blink()
 
             if self._overheat_detected:
                 # wait for send continue
@@ -178,20 +178,20 @@ class HeatSensor(object):
                     # it means that we have to send continue and set ignore heat flag
                     self._overheat_detected = False
 
-                    # self._overheat_ignore = True
-                    # rospy.loginfo('HeatSensor: continue command sent')
-                    # self._cmd_pub.publish(self._continue_command)
-            # else:
-            #     if self._overheat_ignore:
-            #         # wait to start detect heat again
-            #         if rospy.Time.now().to_sec() - self._overheat_start_time >= self._wait_after_detection + self._ignore_heat_after_continue:
-            #             # set off all flags and start detecting
-            #             self._overheat_ignore = False
-            #             self._overheat_start_time = 0  # TODO: do we need to do that
-            #             # turn off the LED by force if it accidentally remains in state on
-            #             # self._alarm_led_pub.publish(False)
-            #             rospy.loginfo('HeatSensor: continue heat detecting')
-            # rospy
+                    self._overheat_ignore = True
+                    rospy.loginfo('HeatSensor: continue command sent')
+                    self._cmd_pub.publish(self._continue_command)
+            else:
+                if self._overheat_ignore:
+                    # wait to start detect heat again
+                    if rospy.Time.now().to_sec() - self._overheat_start_time >= self._wait_after_detection + self._ignore_heat_after_continue:
+                        # set off all flags and start detecting
+                        self._overheat_ignore = False
+                        self._overheat_start_time = 0  # TODO: do we need to do that
+                        # turn off the LED by force if it accidentally remains in state on
+                        # self._alarm_led_pub.publish(False)
+                        rospy.loginfo('HeatSensor: continue heat detecting')
+            rospy
             self._rate.sleep()
 
 
